@@ -54,7 +54,7 @@ module.exports = async (inputs) => {
 
   const { githubToken, org, repos } = inputs;
   const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
-  const isSponsor = false
+  const isSponsor = false;
   const telemetry = new Telemetry({ core, isSponsor, telemetry: inputs.telemetry });
   if (isSponsor) core.info(t('execution.logs.sponsors'));
 
