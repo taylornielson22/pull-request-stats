@@ -17,12 +17,7 @@ const run = async ({ inputs, octokit }) => {
   const pullRequest = inputs.pullRequestId
     ? await fetchPullRequestById(octokit, inputs.pullRequestId)
     : null;
-
-  if (alreadyPublished(pullRequest)) {
-    core.info('Skipping execution because stats are published already');
-    return null;
-  }
-
+  core.info(`Base API URL: ${getGithubApiUrl()}`);
   const pulls = await getPulls({
     org: inputs.org,
     repos: inputs.repos,
@@ -38,7 +33,7 @@ const run = async ({ inputs, octokit }) => {
     includeStr: inputs.includeStr,
     periodLength: inputs.periodLength,
   });
-  core.debug(`Analyzed entries: ${entries.length}`);
+  core.info(`Analyzed entries: ${entries.length}`);
 
   await publish({
     core,
@@ -59,7 +54,7 @@ module.exports = async (inputs) => {
 
   const { githubToken, org, repos } = inputs;
   const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
-  const isSponsor = await checkSponsorship({ octokit, org, repos });
+  const isSponsor = false
   const telemetry = new Telemetry({ core, isSponsor, telemetry: inputs.telemetry });
   if (isSponsor) core.info(t('execution.logs.sponsors'));
 
